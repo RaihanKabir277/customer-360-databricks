@@ -33,6 +33,15 @@ marketing notifications.
 | Silver | 11     | 1,170,500      |
 | Gold   | 6      | Pre-aggregated |
 
+
+## Notebooks
+| Notebook | Purpose |
+|----------|---------|
+| 00_Project_Architecture | Visual pipeline + live row counts |
+| Bronze.py | Raw ingestion from CSV to Delta |
+| Silver.py | Data quality + ID reconciliation |
+| Gold.py | Business aggregations + score formulas |
+
 ## Dashboard panels
 - Customer header with tags (High Value, Digital-first, Low churn risk)
 - KPI cards: Total balance, Loan exposure, Credit score, Monthly spend
@@ -43,10 +52,13 @@ marketing notifications.
 - Churn risk trend over time (line chart)
 - Activity feed (merged transactions + interactions)
 
-## Notebooks
-| Notebook | Purpose |
-|----------|---------|
-| 00_Project_Architecture | Visual pipeline + live row counts |
-| Bronze.py | Raw ingestion from CSV to Delta |
-| Silver.py | Data quality + ID reconciliation |
-| Gold.py | Business aggregations + score formulas |
+## Dashboard Preview
+
+![Customer 360 Profile Dashboard](Dashboard_Preview.jpg)
+
+### What the dashboard shows
+- **Top row**: Customer identity + 6 KPI cards (balance, loan, credit score, spending, engagement, churn risk)
+- **Middle row**: Product holdings bar chart + Monthly spending line chart
+- **Bottom row**: Channel usage bar chart + Churn risk trend line chart
+- **Activity feed**: Complete transaction and interaction history
+- **Filter**: Switch any customer ID to see their complete 360° profile instantly
