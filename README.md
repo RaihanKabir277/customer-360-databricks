@@ -10,15 +10,15 @@ cards, transactions, digital activity, CRM interactions and
 marketing notifications.
 
 ## Architecture
-Source CSVs (11 files, 1.17M rows)
-↓
-Bronze Layer — Raw Delta tables (exact copy, audit columns)
-↓
-Silver Layer — Cleaned, typed, ID-reconciled (10 tables + 6 maps)
-↓
-Gold Layer — Pre-aggregated business metrics (6 tables)
-↓
-Databricks AI/BI Dashboard — Customer 360 Profile
+- Source CSVs (11 files, 1.17M rows)
+- ↓
+- Bronze Layer — Raw Delta tables (exact copy, audit columns)
+- ↓
+- Silver Layer — Cleaned, typed, ID-reconciled (10 tables + 6 maps)
+- ↓
+- Gold Layer — Pre-aggregated business metrics (6 tables)
+- ↓
+- Databricks AI/BI Dashboard — Customer 360 Profile
 
 ## Tech stack
 - Platform : Databricks (Unity Catalog, Delta Lake)
