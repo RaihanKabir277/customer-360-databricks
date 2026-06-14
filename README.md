@@ -54,7 +54,11 @@ marketing notifications.
 
 ## Dashboard Preview
 
+**Customer 360 Profile**
 ![Customer 360 Profile Dashboard](Dashboard_Preview.jpg)
+
+**Customer Segmentation**
+![Customer Segmentation Dashboard](Dashboard/customer%20360%20Profile%20Segmentation.jpg)
 
 ### What the dashboard shows
 - **Top row**: Customer identity + 6 KPI cards (balance, loan, credit score, spending, engagement, churn risk)
