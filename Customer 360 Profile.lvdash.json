@@ -397,6 +397,93 @@
           }
         ]
       }
+    },
+    {
+      "name": "15dc7aef",
+      "displayName": "segment_overview",
+      "queryLines": [
+        "SELECT\n",
+        "  primary_segment,\n",
+        "  COUNT(*)                                     AS total_customers,\n",
+        "  ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) AS segment_pct,\n",
+        "  ROUND(AVG(total_balance), 2)                 AS avg_balance,\n",
+        "  ROUND(AVG(credit_score), 0)                  AS avg_credit_score,\n",
+        "  ROUND(AVG(engagement_score), 1)              AS avg_engagement,\n",
+        "  ROUND(AVG(churn_risk_score), 1)              AS avg_churn_risk,\n",
+        "  ROUND(AVG(avg_monthly_spending), 2)          AS avg_monthly_spend,\n",
+        "  ROUND(AVG(total_products), 1)                AS avg_products\n",
+        "FROM customer_360.gold.customer_segments\n",
+        "GROUP BY primary_segment\n",
+        "ORDER BY total_customers DESC"
+      ],
+      "catalog": "customer_360",
+      "schema": "default"
+    },
+    {
+      "name": "0ce7021a",
+      "displayName": "segment_distribution",
+      "queryLines": [
+        "SELECT\n",
+        "  primary_segment,\n",
+        "  COUNT(*)                                     AS customers,\n",
+        "  ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) AS pct,\n",
+        "  ROUND(SUM(total_balance), 2)                 AS total_deposits,\n",
+        "  ROUND(AVG(total_balance), 2)                 AS avg_deposit,\n",
+        "  SUM(CASE WHEN is_affluent         THEN 1 ELSE 0 END) AS affluent_count,\n",
+        "  SUM(CASE WHEN is_mass_market      THEN 1 ELSE 0 END) AS mass_market_count,\n",
+        "  SUM(CASE WHEN is_digital_champion THEN 1 ELSE 0 END) AS digital_champion_count,\n",
+        "  SUM(CASE WHEN is_at_risk          THEN 1 ELSE 0 END) AS at_risk_count\n",
+        "FROM customer_360.gold.customer_segments\n",
+        "GROUP BY primary_segment\n",
+        "ORDER BY customers DESC"
+      ],
+      "catalog": "customer_360",
+      "schema": "default"
+    },
+    {
+      "name": "8f7eedf2",
+      "displayName": "segment_balance_profile",
+      "queryLines": [
+        "SELECT\n",
+        "  primary_segment,\n",
+        "  ROUND(MIN(total_balance), 2)                 AS min_balance,\n",
+        "  ROUND(MAX(total_balance), 2)                 AS max_balance,\n",
+        "  ROUND(AVG(total_balance), 2)                 AS avg_balance,\n",
+        "  ROUND(PERCENTILE(total_balance, 0.5), 2)     AS median_balance,\n",
+        "  COUNT(*)                                     AS customers\n",
+        "FROM customer_360.gold.customer_segments\n",
+        "GROUP BY primary_segment\n",
+        "ORDER BY avg_balance DESC"
+      ],
+      "catalog": "customer_360",
+      "schema": "default"
+    },
+    {
+      "name": "31db30bc",
+      "displayName": "segment_customers_list",
+      "queryLines": [
+        "SELECT\n",
+        "  customer_id,\n",
+        "  full_name,\n",
+        "  city,\n",
+        "  primary_segment,\n",
+        "  credit_score,\n",
+        "  credit_category,\n",
+        "  ROUND(total_balance, 2)                      AS total_balance,\n",
+        "  ROUND(total_loan_amount, 2)                  AS total_loan_amount,\n",
+        "  ROUND(avg_monthly_spending, 2)               AS avg_monthly_spending,\n",
+        "  total_products,\n",
+        "  engagement_score,\n",
+        "  churn_risk_score,\n",
+        "  churn_risk_tier,\n",
+        "  ROUND(mobile_pct, 1)                         AS mobile_pct,\n",
+        "  ROUND(missed_payment_pct, 2)                 AS missed_payment_pct,\n",
+        "  days_since_last_transaction\n",
+        "FROM customer_360.gold.customer_segments\n",
+        "ORDER BY primary_segment, total_balance DESC"
+      ],
+      "catalog": "customer_360",
+      "schema": "default"
     }
   ],
   "pages": [
@@ -1760,6 +1847,11 @@
                 "   * Assign relationship manager\n",
                 "   * Personal outreach within 48 hours"
               ]
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
@@ -1768,14 +1860,850 @@
             "width": 12,
             "height": 12
           }
+        },
+        {
+          "widget": {
+            "name": "e5e376ae",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "76bdee9c",
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {}
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 13,
+            "width": 6,
+            "height": 6
+          }
         }
       ],
       "pageType": "PAGE_TYPE_CANVAS",
       "layoutVersion": "GRID_V1"
     },
     {
-      "name": "abef1620",
+      "name": "2dba438d",
       "displayName": "Customer_Segmentation",
+      "layout": [
+        {
+          "widget": {
+            "name": "a",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "15dc7aef",
+                  "fields": [
+                    {
+                      "name": "sum(total_customers)",
+                      "expression": "SUM(`total_customers`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`primary_segment` IN ('Affluent')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Affluent Customers"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_customers)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "style": {
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 5
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "affluent",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "15dc7aef",
+                  "fields": [
+                    {
+                      "name": "sum(total_customers)",
+                      "expression": "SUM(`total_customers`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`primary_segment` IN ('Mass Market')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Mass Market"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_customers)",
+                  "style": {
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 2
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "digital-champions",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "15dc7aef",
+                  "fields": [
+                    {
+                      "name": "sum(total_customers)",
+                      "expression": "SUM(`total_customers`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`primary_segment` IN ('Digital Champion')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Digital Champions"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_customers)",
+                  "style": {
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "at-risk-customers",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "15dc7aef",
+                  "fields": [
+                    {
+                      "name": "sum(total_customers)",
+                      "expression": "SUM(`total_customers`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`primary_segment` IN ('At-Risk')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "At-Risk Customers"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_customers)",
+                  "style": {
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 4
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "customer-segment-distribution",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "0ce7021a",
+                  "fields": [
+                    {
+                      "name": "primary_segment",
+                      "expression": "`primary_segment`"
+                    },
+                    {
+                      "name": "sum(customers)",
+                      "expression": "SUM(`customers`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Customer Segment Distribution"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "primary_segment",
+                  "displayName": "Primary Segment    ",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(customers)",
+                  "displayName": "Total Customers",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "primary_segment",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "At-Risk",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 4
+                        }
+                      },
+                      {
+                        "value": "Mass Market",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 2
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "average-balance-by-segment",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8f7eedf2",
+                  "fields": [
+                    {
+                      "name": "primary_segment",
+                      "expression": "`primary_segment`"
+                    },
+                    {
+                      "name": "sum(avg_balance)",
+                      "expression": "SUM(`avg_balance`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Average Balance by Segment"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "primary_segment",
+                  "displayName": "Primary Segment",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(avg_balance)",
+                  "displayName": "Average Balance",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "primary_segment",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "At-Risk",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 4
+                        }
+                      },
+                      {
+                        "value": "Mass Market",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 2
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "churn-risk-by-segment",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "15dc7aef",
+                  "fields": [
+                    {
+                      "name": "primary_segment",
+                      "expression": "`primary_segment`"
+                    },
+                    {
+                      "name": "sum(avg_churn_risk)",
+                      "expression": "SUM(`avg_churn_risk`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Churn Risk by Segment"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "primary_segment",
+                  "displayName": "Primary Segment",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(avg_churn_risk)",
+                  "displayName": "Average Churn Risk",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "primary_segment",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Affluent",
+                        "color": "#FFBF00"
+                      },
+                      {
+                        "value": "At-Risk",
+                        "color": "#FF6B6B"
+                      },
+                      {
+                        "value": "Digital Champion",
+                        "color": "#2EC4B6"
+                      },
+                      {
+                        "value": "Mass Market",
+                        "color": "#6C757D"
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "engagement-score-by-segment-1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "15dc7aef",
+                  "fields": [
+                    {
+                      "name": "primary_segment",
+                      "expression": "`primary_segment`"
+                    },
+                    {
+                      "name": "sum(avg_engagement)",
+                      "expression": "SUM(`avg_engagement`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Engagement Score by Segment"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "primary_segment",
+                  "displayName": "Primary Segment",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(avg_engagement)",
+                  "displayName": "Average Engagement",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "primary_segment",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Affluent",
+                        "color": "#FFBF00"
+                      },
+                      {
+                        "value": "At-Risk",
+                        "color": "#FF6B6B"
+                      },
+                      {
+                        "value": "Digital Champion",
+                        "color": "#2EC4B6"
+                      },
+                      {
+                        "value": "Mass Market",
+                        "color": "#6C757D"
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "customer-list-by-segment-1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "31db30bc",
+                  "fields": [
+                    {
+                      "name": "customer_id",
+                      "expression": "`customer_id`"
+                    },
+                    {
+                      "name": "full_name",
+                      "expression": "`full_name`"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    },
+                    {
+                      "name": "primary_segment",
+                      "expression": "`primary_segment`"
+                    },
+                    {
+                      "name": "credit_score",
+                      "expression": "`credit_score`"
+                    },
+                    {
+                      "name": "credit_category",
+                      "expression": "`credit_category`"
+                    },
+                    {
+                      "name": "total_balance",
+                      "expression": "`total_balance`"
+                    },
+                    {
+                      "name": "total_loan_amount",
+                      "expression": "`total_loan_amount`"
+                    },
+                    {
+                      "name": "avg_monthly_spending",
+                      "expression": "`avg_monthly_spending`"
+                    },
+                    {
+                      "name": "total_products",
+                      "expression": "`total_products`"
+                    },
+                    {
+                      "name": "engagement_score",
+                      "expression": "`engagement_score`"
+                    },
+                    {
+                      "name": "churn_risk_score",
+                      "expression": "`churn_risk_score`"
+                    },
+                    {
+                      "name": "churn_risk_tier",
+                      "expression": "`churn_risk_tier`"
+                    },
+                    {
+                      "name": "mobile_pct",
+                      "expression": "`mobile_pct`"
+                    },
+                    {
+                      "name": "missed_payment_pct",
+                      "expression": "`missed_payment_pct`"
+                    },
+                    {
+                      "name": "days_since_last_transaction",
+                      "expression": "`days_since_last_transaction`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Customer List by Segment"
+              },
+              "displayRowNumbers": true,
+              "bandedRows": {
+                "enabled": true
+              },
+              "headerStyle": {
+                "backgroundColor": {
+                  "themeColorType": "visualizationColors",
+                  "position": 6
+                },
+                "foregroundColor": {
+                  "themeColorType": "fontColor"
+                },
+                "bold": true,
+                "italic": true
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "customer_id"
+                  },
+                  {
+                    "fieldName": "full_name"
+                  },
+                  {
+                    "fieldName": "city"
+                  },
+                  {
+                    "fieldName": "primary_segment"
+                  },
+                  {
+                    "fieldName": "credit_score"
+                  },
+                  {
+                    "fieldName": "credit_category"
+                  },
+                  {
+                    "fieldName": "total_balance"
+                  },
+                  {
+                    "fieldName": "total_loan_amount"
+                  },
+                  {
+                    "fieldName": "avg_monthly_spending"
+                  },
+                  {
+                    "fieldName": "total_products"
+                  },
+                  {
+                    "fieldName": "engagement_score"
+                  },
+                  {
+                    "fieldName": "churn_risk_score"
+                  },
+                  {
+                    "fieldName": "churn_risk_tier"
+                  },
+                  {
+                    "fieldName": "mobile_pct"
+                  },
+                  {
+                    "fieldName": "missed_payment_pct"
+                  },
+                  {
+                    "fieldName": "days_since_last_transaction"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "segment-11",
+            "queries": [
+              {
+                "name": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f167ac679a1a7fb4b2900336691560_primary_segment",
+                "query": {
+                  "datasetName": "31db30bc",
+                  "fields": [
+                    {
+                      "name": "primary_segment",
+                      "expression": "`primary_segment`"
+                    },
+                    {
+                      "name": "primary_segment_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Segment"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "primary_segment",
+                    "queryName": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f167ac679a1a7fb4b2900336691560_primary_segment"
+                  }
+                ]
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 1
+          }
+        }
+      ],
       "pageType": "PAGE_TYPE_CANVAS",
       "layoutVersion": "GRID_V1"
     }
