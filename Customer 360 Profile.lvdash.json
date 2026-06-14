@@ -484,6 +484,129 @@
       ],
       "catalog": "customer_360",
       "schema": "default"
+    },
+    {
+      "name": "2db4ac18",
+      "displayName": "product_prob_summary",
+      "queryLines": [
+        "SELECT\n",
+        "  'Mortgage'             AS product,\n",
+        "  mortgage_priority      AS priority,\n",
+        "  COUNT(*)               AS customers,\n",
+        "  ROUND(AVG(mortgage_probability), 1) AS avg_probability\n",
+        "FROM customer_360.gold.product_recommendations\n",
+        "GROUP BY mortgage_priority\n",
+        "\n",
+        "UNION ALL\n",
+        "\n",
+        "SELECT\n",
+        "  'Wealth Product'       AS product,\n",
+        "  wealth_priority        AS priority,\n",
+        "  COUNT(*)               AS customers,\n",
+        "  ROUND(AVG(wealth_probability), 1) AS avg_probability\n",
+        "FROM customer_360.gold.product_recommendations\n",
+        "GROUP BY wealth_priority\n",
+        "\n",
+        "UNION ALL\n",
+        "\n",
+        "SELECT\n",
+        "  'Credit Card Upgrade'  AS product,\n",
+        "  credit_card_priority   AS priority,\n",
+        "  COUNT(*)               AS customers,\n",
+        "  ROUND(AVG(credit_card_upgrade_probability), 1) AS avg_probability\n",
+        "FROM customer_360.gold.product_recommendations\n",
+        "GROUP BY credit_card_priority\n",
+        "ORDER BY product, priority"
+      ],
+      "catalog": "customer_360",
+      "schema": "default"
+    },
+    {
+      "name": "e936f12b",
+      "displayName": "top_recommendations",
+      "queryLines": [
+        "SELECT\n",
+        "  top_recommendation,\n",
+        "  COUNT(*)               AS customers,\n",
+        "  ROUND(AVG(mortgage_probability), 1)              AS avg_mortgage_prob,\n",
+        "  ROUND(AVG(wealth_probability), 1)                AS avg_wealth_prob,\n",
+        "  ROUND(AVG(credit_card_upgrade_probability), 1)   AS avg_cc_prob\n",
+        "FROM customer_360.gold.product_recommendations\n",
+        "GROUP BY top_recommendation\n",
+        "ORDER BY customers DESC"
+      ],
+      "catalog": "customer_360",
+      "schema": "default"
+    },
+    {
+      "name": "16fc19b0",
+      "displayName": "customer_product_probability",
+      "queryLines": [
+        "SELECT\n",
+        "  customer_id,\n",
+        "  full_name,\n",
+        "  city,\n",
+        "  primary_segment,\n",
+        "  credit_score,\n",
+        "  credit_category,\n",
+        "  ROUND(total_balance, 2)                          AS total_balance,\n",
+        "  ROUND(avg_monthly_spending, 2)                   AS avg_monthly_spending,\n",
+        "  mortgage_probability,\n",
+        "  mortgage_priority,\n",
+        "  wealth_probability,\n",
+        "  wealth_priority,\n",
+        "  credit_card_upgrade_probability,\n",
+        "  credit_card_priority,\n",
+        "  top_recommendation,\n",
+        "  engagement_score,\n",
+        "  churn_risk_score\n",
+        "FROM customer_360.gold.product_recommendations\n",
+        "ORDER BY mortgage_probability DESC"
+      ],
+      "catalog": "customer_360",
+      "schema": "default"
+    },
+    {
+      "name": "product_priority_analysis",
+      "displayName": "Product Priority Analysis",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT 'Mortgage' AS product, mortgage_probability AS probability, mortgage_priority AS priority, customer_id\nFROM customer_360.gold.product_recommendations\nWHERE mortgage_probability IS NOT NULL\n\nUNION ALL\n\nSELECT 'Wealth Management' AS product, wealth_probability AS probability, wealth_priority AS priority, customer_id\nFROM customer_360.gold.product_recommendations\nWHERE wealth_probability IS NOT NULL\n\nUNION ALL\n\nSELECT 'Credit Card Upgrade' AS product, credit_card_upgrade_probability AS probability, credit_card_priority AS priority, customer_id\nFROM customer_360.gold.product_recommendations\nWHERE credit_card_upgrade_probability IS NOT NULL",
+        "dimensions": [
+          {
+            "name": "product",
+            "expr": "source.product",
+            "displayName": "Product"
+          },
+          {
+            "name": "priority",
+            "expr": "source.priority",
+            "displayName": "Priority"
+          },
+          {
+            "name": "probability",
+            "expr": "source.probability",
+            "displayName": "Probability"
+          },
+          {
+            "name": "customer_id",
+            "expr": "source.customer_id",
+            "displayName": "Customer ID"
+          }
+        ],
+        "measures": [
+          {
+            "name": "avg_probability",
+            "expr": "AVG(probability)",
+            "displayName": "Average Probability"
+          },
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "displayName": "Count"
+          }
+        ]
+      }
     }
   ],
   "pages": [
@@ -2700,6 +2823,643 @@
             "x": 0,
             "y": 15,
             "width": 12,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "d252e9a2",
+      "displayName": "Product_Recommendations",
+      "layout": [
+        {
+          "widget": {
+            "name": "mortgage-candidates",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e936f12b",
+                  "fields": [
+                    {
+                      "name": "sum(customers)",
+                      "expression": "SUM(`customers`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`top_recommendation` IN ('Mortgage')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Mortgage Candidates"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(customers)",
+                  "style": {
+                    "color": "#3A9EFF"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "wealth-product-candidates",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e936f12b",
+                  "fields": [
+                    {
+                      "name": "sum(customers)",
+                      "expression": "SUM(`customers`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`top_recommendation` IN ('Wealth Product')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Wealth Product Candidates"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(customers)",
+                  "style": {
+                    "color": "#FFBF00"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "card-upgrade-candidates",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e936f12b",
+                  "fields": [
+                    {
+                      "name": "sum(customers)",
+                      "expression": "SUM(`customers`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`top_recommendation` IN ('Credit Card Upgrade')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Card Upgrade Candidates"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(customers)",
+                  "style": {
+                    "color": "#B0B7BD"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "top-recommendation-distribution",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e936f12b",
+                  "fields": [
+                    {
+                      "name": "top_recommendation",
+                      "expression": "`top_recommendation`"
+                    },
+                    {
+                      "name": "sum(customers)",
+                      "expression": "SUM(`customers`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Top Recommendation Distribution"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "top_recommendation",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(customers)",
+                  "displayName": "Total Customers",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "top_recommendation",
+                  "displayName": "Top Recomendation",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Mortgage",
+                        "color": "#3A9EFF"
+                      },
+                      {
+                        "value": "Wealth Product",
+                        "color": "#FFBF00"
+                      },
+                      {
+                        "value": "Credit Card Upgrade",
+                        "color": "#B0B7BD"
+                      }
+                    ]
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "high-priority-customers-by-product",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2db4ac18",
+                  "fields": [
+                    {
+                      "name": "priority",
+                      "expression": "`priority`"
+                    },
+                    {
+                      "name": "product",
+                      "expression": "`product`"
+                    },
+                    {
+                      "name": "sum(customers)",
+                      "expression": "SUM(`customers`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`priority` IN ('High')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "High Priority Customers by Product"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "product",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(customers)",
+                  "displayName": "Total Customers",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "priority",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "High",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 3
+                        }
+                      }
+                    ]
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "avg-probability-by-product",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "product_priority_analysis",
+                  "fields": [
+                    {
+                      "name": "priority",
+                      "expression": "`priority`"
+                    },
+                    {
+                      "name": "product",
+                      "expression": "`product`"
+                    },
+                    {
+                      "name": "measure(avg_probability)",
+                      "expression": "MEASURE(`avg_probability`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Avg Probability by Product",
+                "headerAlignment": "center"
+              },
+              "mark": {
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "product",
+                  "displayName": "Product",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(avg_probability)",
+                  "displayName": "Average Probability",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "priority",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "displayName": "Priority",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "High",
+                        "color": "#DC2626"
+                      },
+                      {
+                        "value": "Medium",
+                        "color": "#F59E0B"
+                      },
+                      {
+                        "value": "Low",
+                        "color": "#10B981"
+                      }
+                    ]
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "customer-product-probability-list",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "16fc19b0",
+                  "fields": [
+                    {
+                      "name": "customer_id",
+                      "expression": "`customer_id`"
+                    },
+                    {
+                      "name": "full_name",
+                      "expression": "`full_name`"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    },
+                    {
+                      "name": "mortgage_probability",
+                      "expression": "`mortgage_probability`"
+                    },
+                    {
+                      "name": "mortgage_priority",
+                      "expression": "`mortgage_priority`"
+                    },
+                    {
+                      "name": "wealth_probability",
+                      "expression": "`wealth_probability`"
+                    },
+                    {
+                      "name": "wealth_priority",
+                      "expression": "`wealth_priority`"
+                    },
+                    {
+                      "name": "credit_card_upgrade_probability",
+                      "expression": "`credit_card_upgrade_probability`"
+                    },
+                    {
+                      "name": "credit_card_priority",
+                      "expression": "`credit_card_priority`"
+                    },
+                    {
+                      "name": "top_recommendation",
+                      "expression": "`top_recommendation`"
+                    },
+                    {
+                      "name": "engagement_score",
+                      "expression": "`engagement_score`"
+                    },
+                    {
+                      "name": "churn_risk_score",
+                      "expression": "`churn_risk_score`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Customer Product Probability List"
+              },
+              "bandedRows": {
+                "enabled": true
+              },
+              "displayRowNumbers": true,
+              "headerStyle": {
+                "backgroundColor": {
+                  "themeColorType": "visualizationColors",
+                  "position": 6
+                }
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "customer_id"
+                  },
+                  {
+                    "fieldName": "full_name"
+                  },
+                  {
+                    "fieldName": "city"
+                  },
+                  {
+                    "fieldName": "mortgage_probability"
+                  },
+                  {
+                    "fieldName": "mortgage_priority"
+                  },
+                  {
+                    "fieldName": "wealth_probability"
+                  },
+                  {
+                    "fieldName": "wealth_priority"
+                  },
+                  {
+                    "fieldName": "credit_card_upgrade_probability"
+                  },
+                  {
+                    "fieldName": "credit_card_priority"
+                  },
+                  {
+                    "fieldName": "top_recommendation"
+                  },
+                  {
+                    "fieldName": "engagement_score"
+                  },
+                  {
+                    "fieldName": "churn_risk_score"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "segment",
+            "queries": [
+              {
+                "name": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f167d29e211890b02b7c49c8500992_primary_segment",
+                "query": {
+                  "datasetName": "16fc19b0",
+                  "fields": [
+                    {
+                      "name": "primary_segment",
+                      "expression": "`primary_segment`"
+                    },
+                    {
+                      "name": "primary_segment_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Segment ",
+                "headerAlignment": "left"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "primary_segment",
+                    "queryName": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f167d29e211890b02b7c49c8500992_primary_segment"
+                  }
+                ]
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 15,
+            "width": 10,
             "height": 1
           }
         }
