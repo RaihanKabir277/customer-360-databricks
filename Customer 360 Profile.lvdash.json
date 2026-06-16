@@ -607,6 +607,33 @@
           }
         ]
       }
+    },
+    {
+      "name": "f208ea37",
+      "displayName": "customer_full_summary",
+      "queryLines": [
+        "SELECT\n",
+        "  customer_id,\n",
+        "  full_name,\n",
+        "  city,\n",
+        "  credit_score,\n",
+        "  credit_category,\n",
+        "  customer_value_tier,\n",
+        "  churn_risk_tier,\n",
+        "  churn_risk_score,\n",
+        "  engagement_score,\n",
+        "  total_balance,\n",
+        "  total_loan_amount,\n",
+        "  avg_monthly_spending,\n",
+        "  total_products,\n",
+        "  is_high_value,\n",
+        "  is_digital_first,\n",
+        "  is_low_churn_risk,\n",
+        "  customer_summary_text,\n",
+        "  generated_at\n",
+        "FROM customer_360.gold.customer_full_summary\n",
+        "ORDER BY full_name"
+      ]
     }
   ],
   "pages": [
@@ -1917,71 +1944,412 @@
       "layout": [
         {
           "widget": {
-            "name": "77ae25e1",
+            "name": "search-customer-by-id-or-name",
+            "queries": [
+              {
+                "name": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f16942518d1269a12b2eeeb98b6058_customer_id",
+                "query": {
+                  "datasetName": "f208ea37",
+                  "fields": [
+                    {
+                      "name": "customer_id",
+                      "expression": "`customer_id`"
+                    },
+                    {
+                      "name": "customer_id_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Search Customer by ID or Name"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "customer_id",
+                    "queryName": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f16942518d1269a12b2eeeb98b6058_customer_id"
+                  }
+                ]
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "customer-name",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f208ea37",
+                  "fields": [
+                    {
+                      "name": "full_name",
+                      "expression": "`full_name`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Customer Name"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "full_name",
+                  "style": {
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "credit-score",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f208ea37",
+                  "fields": [
+                    {
+                      "name": "sum(credit_score)",
+                      "expression": "SUM(`credit_score`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Credit Score"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(credit_score)",
+                  "style": {
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 3,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "total-balance",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f208ea37",
+                  "fields": [
+                    {
+                      "name": "sum(total_balance)",
+                      "expression": "SUM(`total_balance`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Total Balance"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_balance)",
+                  "style": {
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 3
+                    }
+                  },
+                  "formatTemplate": "${{ @formatted }}"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 3,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "engagement-score",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f208ea37",
+                  "fields": [
+                    {
+                      "name": "sum(engagement_score)",
+                      "expression": "SUM(`engagement_score`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Engagement Score"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(engagement_score)",
+                  "style": {
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 3,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "churn-risk-score",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f208ea37",
+                  "fields": [
+                    {
+                      "name": "sum(churn_risk_score)",
+                      "expression": "SUM(`churn_risk_score`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Churn Risk Score"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(churn_risk_score)",
+                  "style": {
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 3
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "complete-customer-summary",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "f208ea37",
+                  "fields": [
+                    {
+                      "name": "customer_summary_text",
+                      "expression": "`customer_summary_text`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Complete Customer Summary"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "customer_summary_text"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 12,
+            "height": 10
+          }
+        },
+        {
+          "widget": {
+            "name": "9d6aa07e",
             "multilineTextboxSpec": {
               "lines": [
-                "## Customer Profile: Gregg Love (CUSW41MVX1XHNFH)\n",
+                "<span style=\"text-align:center;display:block\"><span style=\"font-size:18px\">**ℹ️ Type a Customer ID in the search field below.</span><span style=\"font-size:18px\">&#32;&#32;**</span></span>\n",
                 "\n",
-                "### Overview\n",
-                "* **Customer Since:** Aug 2021 (1,748 days)\n",
-                "* **Location:** Howellmouth\n",
-                "* **Credit Score:** 358 (Poor)\n",
-                "* **Value Tier:** Platinum (High Value)\n",
-                "* **Churn Risk:** Low (6/50)\n",
+                "<span style=\"text-align:center;display:block\"><span style=\"font-size:18px\">**&#32;To clear and search another customer → click \"Reset all to default\" (top right)**</span></span>"
+              ],
+              "verticalAlign": "VERTICAL_ALIGN_CENTER"
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "b47cefcc",
+            "multilineTextboxSpec": {
+              "lines": [
+                "### <span style=\"text-align:center;display:block;\">**🤖 Customer 360 AI Assistant**</span>\n",
                 "\n",
-                "---\n",
+                "<span style=\"text-align:center;display:block;\">**Ask any question about any customer in plain English — no SQL needed.**</span>\n",
                 "\n",
-                "### Financial Position\n",
-                "* **Total Balance:** $152,179.81\n",
-                "  * Savings: $124,652.16\n",
-                "  * Checking: $27,527.65\n",
-                "* **Loan:** $249,711.50 @ 11.24% (High Interest)\n",
-                "* **Monthly Interest:** $2,338.96\n",
-                "* **Cards:** 3 active\n",
-                "\n",
-                "---\n",
-                "\n",
-                "### 🚨 Critical Issues\n",
-                "\n",
-                "* **Transaction Failure Rate: 67%** (only 28 of 85 successful)\n",
-                "* **157 days inactive** since last transaction (Dec 25, 2025)\n",
-                "* Frequent $0 spending months despite transaction attempts\n",
-                "* Recent months show failed transactions consistently\n",
-                "\n",
-                "### ✅ Positive Indicators\n",
-                "\n",
-                "* Perfect payment history (0 missed/late)\n",
-                "* 100% notification engagement\n",
-                "* High digital engagement (57% mobile)\n",
-                "\n",
-                "---\n",
-                "\n",
-                "## Recommended Actions\n",
-                "\n",
-                "1. **URGENT: Investigate Transaction Failures**\n",
-                "   * Contact customer immediately\n",
-                "   * Review payment processing issues\n",
-                "   * Check for fraud blocks or restrictions\n",
-                "\n",
-                "2. **Reactivation Campaign**\n",
-                "   * Email outreach (100% open rate)\n",
-                "   * Review account status\n",
-                "   * Highlight mobile banking features\n",
-                "\n",
-                "3. **Credit & Loan Review**\n",
-                "   * Offer credit counseling\n",
-                "   * Review loan refinancing (reduce 11.24% rate)\n",
-                "   * Discuss credit-building products\n",
-                "\n",
-                "4. **Balance Optimization**\n",
-                "   * Recommend higher-yield savings\n",
-                "   * Discuss investment options\n",
-                "   * Review checking setup\n",
-                "\n",
-                "5. **Retention Priority**\n",
-                "   * Assign relationship manager\n",
-                "   * Personal outreach within 48 hours"
-              ]
+                "<span style=\"text-align:center;display:block;\">[**➤ Open AI Assistant in new tab**](https://dbc-14b24849-51f2.cloud.databricks.com/genie/rooms/01f169470bfb1fd5b782cf196674831d?o=7474654242294589)</span>"
+              ],
+              "verticalAlign": "VERTICAL_ALIGN_CENTER"
             },
             "specExtensions": {
               "widgetBorderColor": {
@@ -1993,7 +2361,7 @@
             "x": 0,
             "y": 0,
             "width": 12,
-            "height": 12
+            "height": 2
           }
         }
       ],
@@ -3444,9 +3812,9 @@
             }
           },
           "position": {
-            "x": 1,
+            "x": 0,
             "y": 15,
-            "width": 10,
+            "width": 12,
             "height": 1
           }
         }
