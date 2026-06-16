@@ -57,6 +57,9 @@ marketing notifications.
 **Customer 360 Profile**
 ![Customer 360 Profile Dashboard](Dashboard_Preview.jpg)
 
+**Customer Summary**
+![Customer Summary Dashboard](Dashboard/Customer_Summary.jpg)
+
 **Customer Segmentation**
 ![Customer Segmentation Dashboard](Dashboard/Customer_360_Profile_Segmentation.jpg)
 
