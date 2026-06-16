@@ -1843,6 +1843,15 @@
                 "title": "Activity Feed",
                 "headerAlignment": "center"
               },
+              "bandedRows": {
+                "enabled": true
+              },
+              "headerStyle": {
+                "backgroundColor": {
+                  "themeColorType": "visualizationColors",
+                  "position": 6
+                }
+              },
               "widgetType": "table",
               "encodings": {
                 "columns": [
@@ -1874,6 +1883,9 @@
                     "fieldName": "event_datetime"
                   }
                 ]
+              },
+              "data": {
+                "queryName": "main_query"
               }
             },
             "specExtensions": {
@@ -1982,31 +1994,6 @@
             "y": 0,
             "width": 12,
             "height": 12
-          }
-        },
-        {
-          "widget": {
-            "name": "e5e376ae",
-            "queries": [
-              {
-                "name": "main_query",
-                "query": {
-                  "datasetName": "76bdee9c",
-                  "disaggregated": true
-                }
-              }
-            ],
-            "spec": {
-              "version": 3,
-              "widgetType": "bar",
-              "encodings": {}
-            }
-          },
-          "position": {
-            "x": 2,
-            "y": 13,
-            "width": 6,
-            "height": 6
           }
         }
       ],
