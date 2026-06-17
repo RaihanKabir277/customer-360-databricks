@@ -34,22 +34,22 @@ Without Customer 360, a bank sees the same customer in pieces:
 ## Dashboard Preview
 
 ### Page 1 — Customer 360 Profile (Individual View)
-![Customer 360 Dashboard](dashboard_preview_page1.png)
+![Customer 360 Dashboard](Customer_360.jpg)
 
 > Switch any Customer ID → every panel refreshes simultaneously showing that customer's complete profile
 
 ### Page 2 — Customer Summary (AI-Powered)
-![Customer Summary Dashboard](dashboard_preview_page2.png)
+![Customer Summary Dashboard](Customer_Summary.jpg)
 
 > Type any Customer ID → instant A-Z narrative summary with risk flags and banker action items + Genie AI assistant
 
 ### Page 3 — Customer Segmentation (Portfolio View)
-![Customer Segmentation Dashboard](dashboard_preview_page3.png)
+![Customer Segmentation Dashboard](Customer_Segments.jpg)
 
 > Portfolio-level view of all 50,000 customers segmented into Affluent, Mass Market, Digital Champions and At-Risk
 
 ### Page 4 — Product Recommendations (Action Board)
-![Product Recommendations Dashboard](dashboard_preview_page4.png)
+![Product Recommendations Dashboard](Product_Recomendation.jpg)
 
 > Per-customer product probability scores with banker conversation scripts and recommended actions
 
@@ -418,7 +418,7 @@ Soft Skills
 Data Engineering · Machine Learning
 
 [![Email](https://img.shields.io/badge/Email-raihank0192%40gmail.com-D14836?style=flat&logo=gmail&logoColor=white)](mailto:raihank0192@gmail.com)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Raihan%20Kabir-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://linkedin.com/in/raihan-kabir)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Raihan%20Kabir-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raihan-kabir218)
 [![GitHub](https://img.shields.io/badge/GitHub-RaihanKabir277-181717?style=flat&logo=github&logoColor=white)](https://github.com/RaihanKabir277)
 
 ---
