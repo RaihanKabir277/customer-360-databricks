@@ -34,22 +34,22 @@ Without Customer 360, a bank sees the same customer in pieces:
 ## Dashboard Preview
 
 ### Page 1 — Customer 360 Profile (Individual View)
-![Customer 360 Dashboard](Customer_360.jpg)
+![Customer 360 Dashboard](Dashboard/Customer_360.jpg)
 
 > Switch any Customer ID → every panel refreshes simultaneously showing that customer's complete profile
 
 ### Page 2 — Customer Summary (AI-Powered)
-![Customer Summary Dashboard](Customer_Summary.jpg)
+![Customer Summary Dashboard](Dashboard/Customer_Summary.jpg)
 
 > Type any Customer ID → instant A-Z narrative summary with risk flags and banker action items + Genie AI assistant
 
 ### Page 3 — Customer Segmentation (Portfolio View)
-![Customer Segmentation Dashboard](Customer_Segments.jpg)
+![Customer Segmentation Dashboard](Dashboard/Customer_Segments.jpg)
 
 > Portfolio-level view of all 50,000 customers segmented into Affluent, Mass Market, Digital Champions and At-Risk
 
 ### Page 4 — Product Recommendations (Action Board)
-![Product Recommendations Dashboard](Product_Recomendation.jpg)
+![Product Recommendations Dashboard](Dashboard/Product_Recomendation.jpg)
 
 > Per-customer product probability scores with banker conversation scripts and recommended actions
 
