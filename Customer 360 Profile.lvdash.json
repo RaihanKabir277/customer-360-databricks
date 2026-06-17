@@ -634,6 +634,107 @@
         "FROM customer_360.gold.customer_full_summary\n",
         "ORDER BY full_name"
       ]
+    },
+    {
+      "name": "58a8a039",
+      "displayName": "customer_recommendation_detail",
+      "queryLines": [
+        "SELECT\n",
+        "  customer_id,\n",
+        "  full_name,\n",
+        "  city,\n",
+        "  primary_segment,\n",
+        "  credit_score,\n",
+        "  credit_category,\n",
+        "  ROUND(total_balance, 2)                        AS total_balance,\n",
+        "  ROUND(avg_monthly_spending, 2)                 AS avg_monthly_spending,\n",
+        "  mortgage_probability,\n",
+        "  mortgage_priority,\n",
+        "  wealth_probability,\n",
+        "  wealth_priority,\n",
+        "  credit_card_upgrade_probability,\n",
+        "  credit_card_priority,\n",
+        "  top_recommendation,\n",
+        "  engagement_score,\n",
+        "  churn_risk_score,\n",
+        "\n",
+        "  CASE\n",
+        "    WHEN churn_risk_score < 30 THEN 'Low'\n",
+        "    WHEN churn_risk_score < 60 THEN 'Medium'\n",
+        "    ELSE                            'High'\n",
+        "  END                                            AS churn_risk_tier,\n",
+        "\n",
+        "  CONCAT(\n",
+        "    '🎯 TOP RECOMMENDATION: ', top_recommendation, '\\n\\n',\n",
+        "    '📞 WHAT TO SAY TO ', UPPER(full_name), ':\\n',\n",
+        "    CASE top_recommendation\n",
+        "      WHEN 'Mortgage' THEN\n",
+        "        CONCAT('\"', full_name, ', based on your excellent savings balance of $',\n",
+        "               FORMAT_NUMBER(total_balance, 0),\n",
+        "               ' and your strong credit profile, you are pre-qualified for our ',\n",
+        "               'home loan program. Would you like to explore our current mortgage rates?\"')\n",
+        "      WHEN 'Wealth Product' THEN\n",
+        "        CONCAT('\"', full_name, ', given your financial strength and investment ',\n",
+        "               'potential, our wealth management team would love to show you how ',\n",
+        "               'your money can work harder. Can we schedule a private consultation?\"')\n",
+        "      ELSE\n",
+        "        CONCAT('\"', full_name, ', as one of our valued customers, you qualify for ',\n",
+        "               'a credit card upgrade with higher limits and premium rewards. ',\n",
+        "               'Would you like to hear more?\"')\n",
+        "    END, '\\n',\n",
+        "    '\\n💼 WHY THIS RECOMMENDATION:\\n',\n",
+        "    '• Mortgage Score     : ', mortgage_probability,\n",
+        "      '/100 (', mortgage_priority, ' priority)\\n',\n",
+        "    '• Wealth Score       : ', wealth_probability,\n",
+        "      '/100 (', wealth_priority, ' priority)\\n',\n",
+        "    '• Card Upgrade Score : ', credit_card_upgrade_probability,\n",
+        "      '/100 (', credit_card_priority, ' priority)\\n',\n",
+        "    '\\n⚡ BANKER ACTION:\\n',\n",
+        "    CASE\n",
+        "      WHEN mortgage_priority = 'High'\n",
+        "      THEN '1. Call within 48 hours — high mortgage conversion probability\\n2. Prepare mortgage rate sheet before calling\\n3. Log call outcome in CRM'\n",
+        "      WHEN wealth_priority = 'High'\n",
+        "      THEN '1. Schedule private wealth consultation this week\\n2. Prepare portfolio performance report\\n3. Invite to next wealth management event'\n",
+        "      WHEN credit_card_priority = 'High'\n",
+        "      THEN '1. Send upgrade offer via preferred channel (mobile/email)\\n2. Follow up in 3 days if no response\\n3. Offer instant approval if called'\n",
+        "      ELSE '1. Maintain relationship — regular quarterly check-in\\n2. Monitor for life events (salary increase, home search)\\n3. Re-evaluate in 90 days'\n",
+        "    END\n",
+        "  )                                              AS banker_action_script,\n",
+        "\n",
+        "  CASE\n",
+        "    WHEN churn_risk_score >= 60 THEN '🚨 HIGH CHURN RISK — Prioritise retention over cross-sell'\n",
+        "    WHEN churn_risk_score >= 30 THEN '⚠️ MEDIUM CHURN RISK — Lead with value, not product push'\n",
+        "    ELSE                             '✅ LOW CHURN RISK — Good time to introduce new product'\n",
+        "  END                                            AS risk_warning\n",
+        "\n",
+        "FROM customer_360.gold.product_recommendations\n",
+        "ORDER BY mortgage_probability DESC"
+      ]
+    },
+    {
+      "name": "91907bb5",
+      "displayName": "customer_probability_bars",
+      "queryLines": [
+        "SELECT customer_id, 'Mortgage'           AS product,\n",
+        "       mortgage_probability              AS probability,\n",
+        "       mortgage_priority                 AS priority\n",
+        "FROM customer_360.gold.product_recommendations\n",
+        "\n",
+        "UNION ALL\n",
+        "\n",
+        "SELECT customer_id, 'Wealth Product'     AS product,\n",
+        "       wealth_probability                AS probability,\n",
+        "       wealth_priority                   AS priority\n",
+        "FROM customer_360.gold.product_recommendations\n",
+        "\n",
+        "UNION ALL\n",
+        "\n",
+        "SELECT customer_id, 'Credit Card Upgrade' AS product,\n",
+        "       credit_card_upgrade_probability    AS probability,\n",
+        "       credit_card_priority               AS priority\n",
+        "FROM customer_360.gold.product_recommendations\n",
+        "ORDER BY customer_id, probability DESC"
+      ]
     }
   ],
   "pages": [
@@ -2343,11 +2444,11 @@
             "name": "b47cefcc",
             "multilineTextboxSpec": {
               "lines": [
-                "### <span style=\"text-align:center;display:block;\">**🤖 Customer 360 AI Assistant**</span>\n",
+                "### <span style=\"text-align:center;display:block\">**🤖 Customer 360 AI Assistant**</span>\n",
                 "\n",
-                "<span style=\"text-align:center;display:block;\">**Ask any question about any customer in plain English — no SQL needed.**</span>\n",
+                "<span style=\"text-align:center;display:block\">**Ask any question about any customer in plain English&#32;**</span>\n",
                 "\n",
-                "<span style=\"text-align:center;display:block;\">[**➤ Open AI Assistant in new tab**](https://dbc-14b24849-51f2.cloud.databricks.com/genie/rooms/01f169470bfb1fd5b782cf196674831d?o=7474654242294589)</span>"
+                "<span style=\"text-align:center;display:block\">[**➤ Open AI Assistant in new tab**](https://dbc-14b24849-51f2.cloud.databricks.com/genie/rooms/01f169470bfb1fd5b782cf196674831d?o=7474654242294589)</span>"
               ],
               "verticalAlign": "VERTICAL_ALIGN_CENTER"
             },
@@ -3239,10 +3340,10 @@
             }
           },
           "position": {
-            "x": 1,
-            "y": 0,
-            "width": 3,
-            "height": 3
+            "x": 0,
+            "y": 7,
+            "width": 4,
+            "height": 2
           }
         },
         {
@@ -3296,9 +3397,9 @@
           },
           "position": {
             "x": 4,
-            "y": 0,
-            "width": 3,
-            "height": 3
+            "y": 7,
+            "width": 4,
+            "height": 2
           }
         },
         {
@@ -3351,10 +3452,10 @@
             }
           },
           "position": {
-            "x": 7,
-            "y": 0,
-            "width": 3,
-            "height": 3
+            "x": 8,
+            "y": 7,
+            "width": 4,
+            "height": 2
           }
         },
         {
@@ -3438,7 +3539,7 @@
           },
           "position": {
             "x": 0,
-            "y": 3,
+            "y": 9,
             "width": 6,
             "height": 6
           }
@@ -3527,7 +3628,7 @@
           },
           "position": {
             "x": 6,
-            "y": 3,
+            "y": 9,
             "width": 6,
             "height": 6
           }
@@ -3624,7 +3725,7 @@
           },
           "position": {
             "x": 0,
-            "y": 9,
+            "y": 15,
             "width": 12,
             "height": 6
           }
@@ -3761,7 +3862,7 @@
           },
           "position": {
             "x": 0,
-            "y": 16,
+            "y": 22,
             "width": 12,
             "height": 6
           }
@@ -3813,9 +3914,211 @@
           },
           "position": {
             "x": 0,
-            "y": 15,
+            "y": 21,
             "width": 12,
             "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "customer_probability_bars",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "91907bb5",
+                  "fields": [
+                    {
+                      "name": "priority",
+                      "expression": "`priority`"
+                    },
+                    {
+                      "name": "sum(probability)",
+                      "expression": "SUM(`probability`)"
+                    },
+                    {
+                      "name": "product",
+                      "expression": "`product`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(probability)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "product",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "color": {
+                  "fieldName": "priority",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "search-customer-id",
+            "queries": [
+              {
+                "name": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f16a09a65d112f86f85f7336891bab_customer_id",
+                "query": {
+                  "datasetName": "91907bb5",
+                  "fields": [
+                    {
+                      "name": "customer_id",
+                      "expression": "`customer_id`"
+                    },
+                    {
+                      "name": "customer_id_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f16a08df6a1717af5e2148a2b4c9a0_customer_id",
+                "query": {
+                  "datasetName": "58a8a039",
+                  "fields": [
+                    {
+                      "name": "customer_id",
+                      "expression": "`customer_id`"
+                    },
+                    {
+                      "name": "customer_id_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "🔍 Search Customer ID"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "customer_id",
+                    "queryName": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f16a09a65d112f86f85f7336891bab_customer_id"
+                  },
+                  {
+                    "fieldName": "customer_id",
+                    "queryName": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f16a08df6a1717af5e2148a2b4c9a0_customer_id"
+                  }
+                ]
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "banker-recommendation-script",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "58a8a039",
+                  "fields": [
+                    {
+                      "name": "banker_action_script",
+                      "expression": "`banker_action_script`"
+                    },
+                    {
+                      "name": "risk_warning",
+                      "expression": "`risk_warning`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Banker Recommendation Script"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "banker_action_script"
+                  },
+                  {
+                    "fieldName": "risk_warning"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 1,
+            "width": 6,
+            "height": 6
           }
         }
       ],
