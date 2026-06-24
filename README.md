@@ -11,6 +11,11 @@
 
 </div>
 
+## Links
+
+- **GitHub Repository:** https://github.com/RaihanKabir277/customer-360-databricks
+- **Live Demo:** https://customer-360-appgit-rbmqjxoenyrl2ztnewcla6.streamlit.app/
+
 ---
 
 ## What is Customer 360?
