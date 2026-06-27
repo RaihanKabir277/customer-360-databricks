@@ -735,6 +735,78 @@
         "FROM customer_360.gold.product_recommendations\n",
         "ORDER BY customer_id, probability DESC"
       ]
+    },
+    {
+      "name": "4aae1e99",
+      "displayName": "benchmark_kpis",
+      "queryLines": [
+        "SELECT\n",
+        "  COUNT(*)                                                        AS total_customers,\n",
+        "  SUM(CASE WHEN is_churned THEN 1 ELSE 0 END)                     AS churned_customers,\n",
+        "  ROUND(AVG(CASE WHEN is_churned THEN 1.0 ELSE 0 END) * 100, 2)  AS overall_churn_rate_pct,\n",
+        "  ROUND(AVG(credit_score), 0)                                     AS avg_credit_score,\n",
+        "  ROUND(AVG(age), 1)                                              AS avg_age,\n",
+        "  ROUND(AVG(balance), 2)                                          AS avg_balance,\n",
+        "  ROUND(AVG(num_of_products), 2)                                  AS avg_products,\n",
+        "  COUNT(DISTINCT geography)                                        AS countries_covered\n",
+        "FROM customer_360.silver.silver_churn_benchmark"
+      ]
+    },
+    {
+      "name": "8c96a6d2",
+      "displayName": "risk_drivers",
+      "queryLines": [
+        "SELECT\n",
+        "  dimension,\n",
+        "  category,\n",
+        "  customers,\n",
+        "  churn_rate_pct,\n",
+        "  pct_points_above_average,\n",
+        "  times_riskier_than_average,\n",
+        "  overall_risk_rank\n",
+        "FROM customer_360.gold.churn_risk_drivers\n",
+        "ORDER BY overall_risk_rank"
+      ]
+    },
+    {
+      "name": "bebdfd82",
+      "displayName": "dimension_breakdown",
+      "queryLines": [
+        "SELECT\n",
+        "  dimension,\n",
+        "  category,\n",
+        "  customers,\n",
+        "  churn_rate_pct,\n",
+        "  risk_rank\n",
+        "FROM customer_360.gold.churn_benchmark_by_dimension\n",
+        "ORDER BY dimension, risk_rank"
+      ]
+    },
+    {
+      "name": "fcf3a039",
+      "displayName": "segment_detail",
+      "queryLines": [
+        "SELECT\n",
+        "  customer_id,\n",
+        "  surname,\n",
+        "  geography,\n",
+        "  gender,\n",
+        "  age,\n",
+        "  age_band,\n",
+        "  credit_score,\n",
+        "  credit_score_band,\n",
+        "  balance,\n",
+        "  balance_tier,\n",
+        "  num_of_products,\n",
+        "  product_category,\n",
+        "  estimated_salary,\n",
+        "  salary_band,\n",
+        "  has_credit_card,\n",
+        "  is_active,\n",
+        "  churn_label\n",
+        "FROM customer_360.silver.silver_churn_benchmark\n",
+        "ORDER BY credit_score DESC"
+      ]
     }
   ],
   "pages": [
@@ -4133,6 +4205,819 @@
             "x": 6,
             "y": 1,
             "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "0da6e15e",
+      "displayName": "Churn_Benchmark",
+      "layout": [
+        {
+          "widget": {
+            "name": "dimension-selector",
+            "queries": [
+              {
+                "name": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f1707b322d18c6a1e008a1ff374231_dimension",
+                "query": {
+                  "datasetName": "bebdfd82",
+                  "fields": [
+                    {
+                      "name": "dimension",
+                      "expression": "`dimension`"
+                    },
+                    {
+                      "name": "dimension_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Dimension ",
+                "headerAlignment": "center"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "dimension",
+                    "queryName": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f1707b322d18c6a1e008a1ff374231_dimension"
+                  }
+                ]
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "geography-selector",
+            "queries": [
+              {
+                "name": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f1707b4a4b1079b97511275ec2822c_geography",
+                "query": {
+                  "datasetName": "fcf3a039",
+                  "fields": [
+                    {
+                      "name": "geography",
+                      "expression": "`geography`"
+                    },
+                    {
+                      "name": "geography_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Country"
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "geography",
+                    "queryName": "dashboards/01f15d70b35a18dc8d5c8d33b6b93cb7/datasets/01f1707b4a4b1079b97511275ec2822c_geography"
+                  }
+                ]
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "total-customers-analyzed",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4aae1e99",
+                  "fields": [
+                    {
+                      "name": "sum(total_customers)",
+                      "expression": "SUM(`total_customers`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Total Customers Analyzed"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_customers)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "customers-churned",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4aae1e99",
+                  "fields": [
+                    {
+                      "name": "sum(churned_customers)",
+                      "expression": "SUM(`churned_customers`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Customers Churned"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(churned_customers)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "overall-churn-rate",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4aae1e99",
+                  "fields": [
+                    {
+                      "name": "sum(overall_churn_rate_pct)",
+                      "expression": "SUM(`overall_churn_rate_pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Overall Churn Rate %"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(overall_churn_rate_pct)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "avg-credit-score",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4aae1e99",
+                  "fields": [
+                    {
+                      "name": "sum(avg_credit_score)",
+                      "expression": "SUM(`avg_credit_score`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Avg Credit Score"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(avg_credit_score)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "avg-account-balance",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4aae1e99",
+                  "fields": [
+                    {
+                      "name": "sum(avg_balance)",
+                      "expression": "SUM(`avg_balance`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Avg Account Balance"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(avg_balance)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "avg-products-held",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4aae1e99",
+                  "fields": [
+                    {
+                      "name": "sum(avg_products)",
+                      "expression": "SUM(`avg_products`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Avg Products Held"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(avg_products)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 1,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "top-churn-risk-drivers-ranked-by-actual-churn-rate",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8c96a6d2",
+                  "fields": [
+                    {
+                      "name": "dimension",
+                      "expression": "`dimension`"
+                    },
+                    {
+                      "name": "sum(churn_rate_pct)",
+                      "expression": "SUM(`churn_rate_pct`)"
+                    },
+                    {
+                      "name": "category",
+                      "expression": "`category`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Top Churn Risk Drivers — Ranked by Actual Churn Rate"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(churn_rate_pct)",
+                  "displayName": "Churn Rate %",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "category",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x"
+                    }
+                  }
+                },
+                "color": {
+                  "fieldName": "dimension",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "how-many-times-riskier-than-average",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8c96a6d2",
+                  "fields": [
+                    {
+                      "name": "dimension",
+                      "expression": "`dimension`"
+                    },
+                    {
+                      "name": "category",
+                      "expression": "`category`"
+                    },
+                    {
+                      "name": "churn_rate_pct",
+                      "expression": "`churn_rate_pct`"
+                    },
+                    {
+                      "name": "times_riskier_than_average",
+                      "expression": "`times_riskier_than_average`"
+                    },
+                    {
+                      "name": "customers",
+                      "expression": "`customers`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "How Many Times Riskier Than Average"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "dimension"
+                  },
+                  {
+                    "fieldName": "category"
+                  },
+                  {
+                    "fieldName": "churn_rate_pct"
+                  },
+                  {
+                    "fieldName": "times_riskier_than_average"
+                  },
+                  {
+                    "fieldName": "customers"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "churn-rate-breakdown",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "bebdfd82",
+                  "fields": [
+                    {
+                      "name": "category",
+                      "expression": "`category`"
+                    },
+                    {
+                      "name": "sum(churn_rate_pct)",
+                      "expression": "SUM(`churn_rate_pct`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`dimension` IN (`dimension`) OR TRUE"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Churn Rate Breakdown"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "category",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(churn_rate_pct)",
+                  "displayName": "Churn Rate %",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "category",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "customer-count-by-category",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "bebdfd82",
+                  "fields": [
+                    {
+                      "name": "category",
+                      "expression": "`category`"
+                    },
+                    {
+                      "name": "sum(customers)",
+                      "expression": "SUM(`customers`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`dimension` IN (`dimension`) OR TRUE"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Customer Count by Category"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "category",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(customers)",
+                  "displayName": "Total Customers",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "category",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 16,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "customer-level-detail",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "fcf3a039",
+                  "fields": [
+                    {
+                      "name": "customer_id",
+                      "expression": "`customer_id`"
+                    },
+                    {
+                      "name": "surname",
+                      "expression": "`surname`"
+                    },
+                    {
+                      "name": "geography",
+                      "expression": "`geography`"
+                    },
+                    {
+                      "name": "gender",
+                      "expression": "`gender`"
+                    },
+                    {
+                      "name": "age",
+                      "expression": "`age`"
+                    },
+                    {
+                      "name": "age_band",
+                      "expression": "`age_band`"
+                    },
+                    {
+                      "name": "credit_score",
+                      "expression": "`credit_score`"
+                    },
+                    {
+                      "name": "credit_score_band",
+                      "expression": "`credit_score_band`"
+                    },
+                    {
+                      "name": "balance",
+                      "expression": "`balance`"
+                    },
+                    {
+                      "name": "balance_tier",
+                      "expression": "`balance_tier`"
+                    },
+                    {
+                      "name": "num_of_products",
+                      "expression": "`num_of_products`"
+                    },
+                    {
+                      "name": "product_category",
+                      "expression": "`product_category`"
+                    },
+                    {
+                      "name": "estimated_salary",
+                      "expression": "`estimated_salary`"
+                    },
+                    {
+                      "name": "salary_band",
+                      "expression": "`salary_band`"
+                    },
+                    {
+                      "name": "has_credit_card",
+                      "expression": "`has_credit_card`"
+                    },
+                    {
+                      "name": "is_active",
+                      "expression": "`is_active`"
+                    },
+                    {
+                      "name": "churn_label",
+                      "expression": "`churn_label`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`geography` IN (`geography`) OR TRUE"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "headerAlignment": "center",
+                "title": "Customer-Level Detail"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "customer_id"
+                  },
+                  {
+                    "fieldName": "surname"
+                  },
+                  {
+                    "fieldName": "geography"
+                  },
+                  {
+                    "fieldName": "gender"
+                  },
+                  {
+                    "fieldName": "age"
+                  },
+                  {
+                    "fieldName": "age_band"
+                  },
+                  {
+                    "fieldName": "credit_score"
+                  },
+                  {
+                    "fieldName": "credit_score_band"
+                  },
+                  {
+                    "fieldName": "balance"
+                  },
+                  {
+                    "fieldName": "balance_tier"
+                  },
+                  {
+                    "fieldName": "num_of_products"
+                  },
+                  {
+                    "fieldName": "product_category"
+                  },
+                  {
+                    "fieldName": "estimated_salary"
+                  },
+                  {
+                    "fieldName": "salary_band"
+                  },
+                  {
+                    "fieldName": "has_credit_card"
+                  },
+                  {
+                    "fieldName": "is_active"
+                  },
+                  {
+                    "fieldName": "churn_label"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 22,
+            "width": 12,
             "height": 6
           }
         }
