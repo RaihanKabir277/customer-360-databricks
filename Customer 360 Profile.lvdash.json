@@ -4263,8 +4263,8 @@
           },
           "position": {
             "x": 0,
-            "y": 0,
-            "width": 6,
+            "y": 3,
+            "width": 12,
             "height": 1
           }
         },
@@ -4313,9 +4313,9 @@
             }
           },
           "position": {
-            "x": 6,
-            "y": 0,
-            "width": 6,
+            "x": 0,
+            "y": 10,
+            "width": 12,
             "height": 1
           }
         },
@@ -4344,20 +4344,44 @@
                 "headerAlignment": "center",
                 "title": "Total Customers Analyzed"
               },
+              "style": {
+                "fontColor": {
+                  "dark": "#E8F0E8"
+                }
+              },
               "widgetType": "counter",
               "encodings": {
                 "value": {
-                  "fieldName": "sum(total_customers)"
+                  "fieldName": "sum(total_customers)",
+                  "formatTemplate": "{{ @formatted }}",
+                  "style": {
+                    "rules": [
+                      {
+                        "condition": {
+                          "operator": ">="
+                        },
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 3
+                        }
+                      }
+                    ]
+                  }
                 }
               },
               "data": {
                 "queryName": "main_query"
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
             "x": 0,
-            "y": 1,
+            "y": 0,
             "width": 2,
             "height": 3
           }
@@ -4396,11 +4420,16 @@
               "data": {
                 "queryName": "main_query"
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
             "x": 2,
-            "y": 1,
+            "y": 0,
             "width": 2,
             "height": 3
           }
@@ -4439,11 +4468,16 @@
               "data": {
                 "queryName": "main_query"
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
             "x": 4,
-            "y": 1,
+            "y": 0,
             "width": 2,
             "height": 3
           }
@@ -4482,11 +4516,16 @@
               "data": {
                 "queryName": "main_query"
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
             "x": 6,
-            "y": 1,
+            "y": 0,
             "width": 2,
             "height": 3
           }
@@ -4525,11 +4564,16 @@
               "data": {
                 "queryName": "main_query"
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
             "x": 8,
-            "y": 1,
+            "y": 0,
             "width": 2,
             "height": 3
           }
@@ -4568,159 +4612,18 @@
               "data": {
                 "queryName": "main_query"
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
             "x": 10,
-            "y": 1,
+            "y": 0,
             "width": 2,
             "height": 3
-          }
-        },
-        {
-          "widget": {
-            "name": "top-churn-risk-drivers-ranked-by-actual-churn-rate",
-            "queries": [
-              {
-                "name": "main_query",
-                "query": {
-                  "datasetName": "8c96a6d2",
-                  "fields": [
-                    {
-                      "name": "dimension",
-                      "expression": "`dimension`"
-                    },
-                    {
-                      "name": "sum(churn_rate_pct)",
-                      "expression": "SUM(`churn_rate_pct`)"
-                    },
-                    {
-                      "name": "category",
-                      "expression": "`category`"
-                    }
-                  ],
-                  "disaggregated": false
-                }
-              }
-            ],
-            "spec": {
-              "version": 3,
-              "frame": {
-                "showTitle": true,
-                "headerAlignment": "center",
-                "title": "Top Churn Risk Drivers — Ranked by Actual Churn Rate"
-              },
-              "widgetType": "bar",
-              "encodings": {
-                "x": {
-                  "fieldName": "sum(churn_rate_pct)",
-                  "displayName": "Churn Rate %",
-                  "scale": {
-                    "type": "quantitative"
-                  }
-                },
-                "y": {
-                  "fieldName": "category",
-                  "scale": {
-                    "type": "categorical",
-                    "sort": {
-                      "by": "x"
-                    }
-                  }
-                },
-                "color": {
-                  "fieldName": "dimension",
-                  "scale": {
-                    "type": "categorical"
-                  }
-                },
-                "label": {
-                  "show": false
-                }
-              },
-              "data": {
-                "queryName": "main_query"
-              }
-            }
-          },
-          "position": {
-            "x": 0,
-            "y": 4,
-            "width": 12,
-            "height": 6
-          }
-        },
-        {
-          "widget": {
-            "name": "how-many-times-riskier-than-average",
-            "queries": [
-              {
-                "name": "main_query",
-                "query": {
-                  "datasetName": "8c96a6d2",
-                  "fields": [
-                    {
-                      "name": "dimension",
-                      "expression": "`dimension`"
-                    },
-                    {
-                      "name": "category",
-                      "expression": "`category`"
-                    },
-                    {
-                      "name": "churn_rate_pct",
-                      "expression": "`churn_rate_pct`"
-                    },
-                    {
-                      "name": "times_riskier_than_average",
-                      "expression": "`times_riskier_than_average`"
-                    },
-                    {
-                      "name": "customers",
-                      "expression": "`customers`"
-                    }
-                  ],
-                  "disaggregated": true
-                }
-              }
-            ],
-            "spec": {
-              "version": 2,
-              "frame": {
-                "showTitle": true,
-                "headerAlignment": "center",
-                "title": "How Many Times Riskier Than Average"
-              },
-              "widgetType": "table",
-              "encodings": {
-                "columns": [
-                  {
-                    "fieldName": "dimension"
-                  },
-                  {
-                    "fieldName": "category"
-                  },
-                  {
-                    "fieldName": "churn_rate_pct"
-                  },
-                  {
-                    "fieldName": "times_riskier_than_average"
-                  },
-                  {
-                    "fieldName": "customers"
-                  }
-                ]
-              },
-              "data": {
-                "queryName": "main_query"
-              }
-            }
-          },
-          "position": {
-            "x": 0,
-            "y": 10,
-            "width": 12,
-            "height": 6
           }
         },
         {
@@ -4782,11 +4685,16 @@
               "data": {
                 "queryName": "main_query"
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
             "x": 0,
-            "y": 16,
+            "y": 4,
             "width": 6,
             "height": 6
           }
@@ -4850,11 +4758,16 @@
               "data": {
                 "queryName": "main_query"
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
             "x": 6,
-            "y": 16,
+            "y": 4,
             "width": 6,
             "height": 6
           }
@@ -4953,6 +4866,15 @@
                 "headerAlignment": "center",
                 "title": "Customer-Level Detail"
               },
+              "bandedRows": {
+                "enabled": true
+              },
+              "headerStyle": {
+                "backgroundColor": {
+                  "themeColorType": "visualizationColors",
+                  "position": 6
+                }
+              },
               "widgetType": "table",
               "encodings": {
                 "columns": [
@@ -5012,11 +4934,16 @@
               "data": {
                 "queryName": "main_query"
               }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FFFFFF"
+              }
             }
           },
           "position": {
             "x": 0,
-            "y": 22,
+            "y": 11,
             "width": 12,
             "height": 6
           }
