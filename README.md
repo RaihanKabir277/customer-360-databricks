@@ -143,7 +143,7 @@ Without Customer 360, a bank sees the same customer in pieces:
 The full Bronze → Silver → Gold pipeline is orchestrated as a 
 8-task Databricks Job with  dependencies.
 
-![Run Timeline](pipeline_run.png)
+![Run Timeline](Dashboard/pipeline.png)
 
 
 ---
