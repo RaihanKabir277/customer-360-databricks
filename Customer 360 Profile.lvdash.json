@@ -4570,7 +4570,16 @@
                       "themeColorType": "visualizationColors",
                       "position": 3
                     }
-                  }
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "formatTemplate": "${{ @formatted }}"
                 }
               },
               "data": {
@@ -4698,6 +4707,9 @@
                   "scale": {
                     "type": "categorical"
                   }
+                },
+                "label": {
+                  "show": true
                 }
               },
               "data": {
@@ -4771,6 +4783,9 @@
                   "scale": {
                     "type": "categorical"
                   }
+                },
+                "label": {
+                  "show": true
                 }
               },
               "data": {
