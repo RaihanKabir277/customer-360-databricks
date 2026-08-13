@@ -812,7 +812,7 @@
   "pages": [
     {
       "name": "ea290f7c",
-      "displayName": "Customer_360",
+      "displayName": "Customer 360",
       "layout": [
         {
           "widget": {
@@ -2127,7 +2127,7 @@
     },
     {
       "name": "50669d57",
-      "displayName": "Customer_Summary",
+      "displayName": "Customer Summary",
       "layout": [
         {
           "widget": {
@@ -2557,7 +2557,7 @@
     },
     {
       "name": "2dba438d",
-      "displayName": "Customer_Segmentation",
+      "displayName": "Customer Segmentation",
       "layout": [
         {
           "widget": {
@@ -3374,7 +3374,7 @@
     },
     {
       "name": "d252e9a2",
-      "displayName": "Product_Recommendations",
+      "displayName": "Product Recommendations",
       "layout": [
         {
           "widget": {
@@ -4214,7 +4214,7 @@
     },
     {
       "name": "0da6e15e",
-      "displayName": "Churn_Benchmark",
+      "displayName": "Bank Customer Churn Intelligence",
       "layout": [
         {
           "widget": {
@@ -4705,7 +4705,16 @@
                 "color": {
                   "fieldName": "category",
                   "scale": {
-                    "type": "categorical"
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Inactive",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 8
+                        }
+                      }
+                    ]
                   }
                 },
                 "label": {
@@ -4781,7 +4790,16 @@
                 "color": {
                   "fieldName": "category",
                   "scale": {
-                    "type": "categorical"
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Inactive",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 8
+                        }
+                      }
+                    ]
                   }
                 },
                 "label": {
@@ -5063,7 +5081,39 @@
   ],
   "uiSettings": {
     "theme": {
-      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+      "canvasBackgroundColor": {
+        "light": "#FAFAFB",
+        "dark": "#1F272D"
+      },
+      "widgetBackgroundColor": {
+        "light": "#FFFFFF",
+        "dark": "#11171C"
+      },
+      "fontColor": {
+        "light": "#11171C",
+        "dark": "#E8ECF0"
+      },
+      "selectionColor": {
+        "light": "#2272B4",
+        "dark": "#8ACAFF"
+      },
+      "visualizationColors": [
+        "#077A9D",
+        "#FFAB00",
+        "#00A972",
+        "#FF3621",
+        "#8BCAE7",
+        "#AB4057",
+        "#99DDB4",
+        "#FCA4A1",
+        "#919191",
+        "#BF7080"
+      ],
+      "widgetHeaderAlignment": "LEFT",
+      "widgetPadding": 8,
+      "widgetMargin": 8,
+      "widgetCornerRadius": 12,
+      "widgetShadow": 100
     },
     "applyModeEnabled": false
   }
